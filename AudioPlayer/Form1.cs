@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Media;
 using WMPLib;
 using System.Runtime.InteropServices;
 using System.IO;
-using System.Windows.Media;
 using AxWMPLib;
-using System.Diagnostics;
 
 namespace AudioPlayer
 {
@@ -39,9 +30,10 @@ namespace AudioPlayer
             currentPlay = 0;
             WindowsMediaPlayer.uiMode = "none";
             playerListBox.Visible = false;
-
+            WindowsMediaPlayer.settings.volume = 50;
         }
 
+        #region 資料選擇及清單區塊
         /// <summary>
         /// 更新播放清單
         /// </summary>
@@ -74,7 +66,12 @@ namespace AudioPlayer
             }
             playPauseButton.Text = "播放";
         }
+        #endregion
 
+        #region 撥放邏輯區塊
+        /// <summary>
+        /// 撥放邏輯
+        /// </summary>
         private void PlaySelectedSong()
         {
 
@@ -85,19 +82,25 @@ namespace AudioPlayer
                 mediaInfo = WindowsMediaPlayer.newMedia(WindowsMediaPlayer.URL);
 
                 volumeScrollBar.Value = WindowsMediaPlayer.settings.volume;
+                volumeLabel.Text = "音量: " + volumeScrollBar.Value;
+
                 playPositionScrollBar.Value = (int)WindowsMediaPlayer.Ctlcontrols.currentPosition;
                 playPositionScrollBar.Maximum = (int)mediaInfo.duration;
 
-
+                this.Text = "AudioPlayer";
                 string str = mediaInfo.name;
-                this.Text = "目前播放 " + str;
+                this.Text += "目前播放 " + str;
                 playerListBox.SelectedIndex = currentPlay;
-                //WindowsMediaPlayer.PlayStateChange -= AutoPlayNext;
                 WindowsMediaPlayer.PlayStateChange += AutoPlayNext;
                 WindowsMediaPlayer.Ctlcontrols.play();
             }
         }
 
+        /// <summary>
+        /// 使用UI優先判斷
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AutoPlayNext(object sender, AxWMPLib._WMPOCXEvents_PlayStateChangeEvent e)
         {
             if (e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded)
@@ -105,18 +108,9 @@ namespace AudioPlayer
                 this.BeginInvoke(new Action(() => PlayNext()));
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 當前無撥放
-        /// </summary>
-        private void MedaiNull()
-        {
-            if (WindowsMediaPlayer.currentMedia == null)
-            {
-                return;
-            }
-        }
-
+        #region 撥放控制區塊
         /// <summary>
         /// 播放上一個
         /// </summary>
@@ -124,7 +118,6 @@ namespace AudioPlayer
         {
             try
             {
-                //MedaiNull();
                 currentPlay = (currentPlay - 1 + playList.Count) % playList.Count;
                 PlaySelectedSong();
             }
@@ -144,20 +137,6 @@ namespace AudioPlayer
         {
             currentPlay = (currentPlay + 1) % playList.Count;
             PlaySelectedSong();
-
-            /*try
-            {
-                MedaiNull();
-                currentPlay = (currentPlay + 1) % playList.Count;
-                PlaySelectedSong();
-            }
-            catch
-            {
-                if (currentPlay == playList.Count)
-                {
-                    MessageBox.Show("無下一首，請增加");
-                }
-            }*/
         }
 
         /// <summary>
@@ -189,7 +168,9 @@ namespace AudioPlayer
             playPositionScrollBar.Value = (int)WindowsMediaPlayer.Ctlcontrols.currentPosition;
             playPositionLabel.Text = "撥放位置: " + WindowsMediaPlayer.Ctlcontrols.currentPositionString;
         }
+        #endregion
 
+        #region WinForm各項控制區塊
         private void openListButton_Click(object sender, EventArgs e)
         {
             if (openListButton.Text == "開啟清單")
@@ -268,17 +249,17 @@ namespace AudioPlayer
             playPositionScrollBar.Value = (int)WindowsMediaPlayer.Ctlcontrols.currentPosition;
         }
 
-
-        /*private void axWindowsMediaPlayer1_OpenStateChange(object sender, AxWMPLib._WMPOCXEvents_OpenStateChangeEvent e)
+        private void WindowsMediaPlayer_OpenStateChange(object sender, _WMPOCXEvents_OpenStateChangeEvent e)
         {
             int w, h;
             if (e.newState == (int)WMPLib.WMPOpenState.wmposMediaOpen)
             {
-                w = axWindowsMediaPlayer1.currentMedia.imageSourceWidth;
-                h = axWindowsMediaPlayer1.currentMedia.imageSourceHeight;
+                w = WindowsMediaPlayer.currentMedia.imageSourceWidth;
+                h = WindowsMediaPlayer.currentMedia.imageSourceHeight;
                 this.Text += ", " + w.ToString() + "x " + h.ToString();
             }
-        }*/
+        }
+        #endregion
 
     }
 }

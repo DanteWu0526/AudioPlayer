@@ -39,11 +39,11 @@
             this.prevButton = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.openListButton = new System.Windows.Forms.Button();
-            this.WindowsMediaPlayer = new AxWMPLib.AxWindowsMediaPlayer();
             this.playPauseButton = new System.Windows.Forms.Button();
             this.stopButton = new System.Windows.Forms.Button();
             this.browseFileButton = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.WindowsMediaPlayer = new AxWMPLib.AxWindowsMediaPlayer();
             ((System.ComponentModel.ISupportInitialize)(this.WindowsMediaPlayer)).BeginInit();
             this.SuspendLayout();
             // 
@@ -125,15 +125,6 @@
             this.openListButton.UseVisualStyleBackColor = true;
             this.openListButton.Click += new System.EventHandler(this.openListButton_Click);
             // 
-            // WindowsMediaPlayer
-            // 
-            this.WindowsMediaPlayer.Enabled = true;
-            this.WindowsMediaPlayer.Location = new System.Drawing.Point(12, 58);
-            this.WindowsMediaPlayer.Name = "WindowsMediaPlayer";
-            this.WindowsMediaPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("WindowsMediaPlayer.OcxState")));
-            this.WindowsMediaPlayer.Size = new System.Drawing.Size(538, 314);
-            this.WindowsMediaPlayer.TabIndex = 13;
-            // 
             // playPauseButton
             // 
             this.playPauseButton.Location = new System.Drawing.Point(12, 12);
@@ -169,6 +160,16 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // WindowsMediaPlayer
+            // 
+            this.WindowsMediaPlayer.Enabled = true;
+            this.WindowsMediaPlayer.Location = new System.Drawing.Point(12, 58);
+            this.WindowsMediaPlayer.Name = "WindowsMediaPlayer";
+            this.WindowsMediaPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("WindowsMediaPlayer.OcxState")));
+            this.WindowsMediaPlayer.Size = new System.Drawing.Size(538, 314);
+            this.WindowsMediaPlayer.TabIndex = 13;
+            this.WindowsMediaPlayer.OpenStateChange += new AxWMPLib._WMPOCXEvents_OpenStateChangeEventHandler(this.WindowsMediaPlayer_OpenStateChange);
             // 
             // Form1
             // 
